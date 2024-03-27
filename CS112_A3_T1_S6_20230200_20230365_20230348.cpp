@@ -17,6 +17,12 @@ bool restart() {
     cin >> choice;
 
     while (choice != "1" && choice != "2" && choice != "3") {
+
+        cout << "\nInvalid Choice\n" << endl;
+        cin.clear();
+        cout << "\n1) Restart The Current Program" << endl;
+        cout << "2) Return To Main Menu" << endl;
+        cout << "3) Exit The Program" << endl;
         cout << "Please select your program from 1-3: ";
         cin >> choice;
     }
@@ -34,8 +40,9 @@ bool restart() {
 }
 
 void grayscale(){
+
     string path;
-    cout << "enter file path: ";
+    cout << "Enter your file path (with File Extention): ";
     getline(cin, path);
 
     ifstream filename;
@@ -44,11 +51,26 @@ void grayscale(){
     while (!filename){
         cout << "File Not Found" << endl;
         cin.clear();
-        cout << "enter file path: ";
+        cout << "Enter your file path (with File Extention): ";
         getline(cin, path);
         filename.open(path);
 
     }
+
+    string saved_file;
+    cout << "Enter The name of the saved file with extentions .jpg / .jpeg / .png / .bmp: " << endl;
+    getline(cin, saved_file);
+
+    regex result("([a-zA-Z0-9]+)\\.(jpg|bmp|png|tga)");
+    while(!regex_match(saved_file, result)){
+
+        cin.ignore();
+        cout << "Invalid File name or extention" << endl;
+        cout << "Enter The name of the saved file with extentions .jpg / .jpeg / .png / .bmp: " << endl;
+        getline(cin, saved_file);
+
+    }
+
 
     Image image(path);
 
@@ -70,7 +92,8 @@ void grayscale(){
 
     }
 
-    image.saveImage("new.jpg");
+    image.saveImage(saved_file);
+    cout << "\n Image Saved succesfully as " << saved_file << "\n" << endl;
 
     if (restart()){
         grayscale();
@@ -129,7 +152,7 @@ void Darken_lighten(){
 
     while (mode != "1" && mode != "2"){
         cerr << "Invalid Choice" << endl;
-        cin.clear();
+        cin.ignore();
         cout << "1) lighten\n2) Darken" << endl;
         cout << "Please select your mode:" << endl;
         getline(cin, mode);
@@ -137,7 +160,7 @@ void Darken_lighten(){
     }
 
     string path;
-    cout << "enter file path: ";
+    cout << "Enter your file path (with File Extention): ";
     getline(cin, path);
 
     ifstream filename;
@@ -146,9 +169,23 @@ void Darken_lighten(){
     while (!filename){
         cout << "File Not Found" << endl;
         cin.clear();
-        cout << "enter file path: ";
+        cout << "Enter your file path (with File Extention): ";
         getline(cin, path);
         filename.open(path);
+
+    }
+
+    string saved_file;
+    cout << "Enter The name of the saved file with extentions .jpg / .jpeg / .png / .bmp: " << endl;
+    getline(cin, saved_file);
+
+    regex result("([a-zA-Z0-9]+)\\.(jpg|bmp|png|tga)");
+    while(!regex_match(saved_file, result)){
+
+        cin.ignore();
+        cout << "Invalid File name or extention" << endl;
+        cout << "Enter The name of the saved file with extentions .jpg / .jpeg / .png / .bmp: " << endl;
+        getline(cin, saved_file);
 
     }
 
@@ -174,7 +211,8 @@ void Darken_lighten(){
             }
         }
 
-        image.saveImage("lighter.jpg");
+        image.saveImage(saved_file);
+        cout << "\n Image Saved succesfully as " << saved_file << "\n" << endl;
     }
 
     else if (mode == "2") {
@@ -196,7 +234,8 @@ void Darken_lighten(){
             }
         }
 
-        image.saveImage("darker.jpg");
+        image.saveImage(saved_file);
+        cout << "\n Image Saved succesfully as " << saved_file << "\n" << endl;
     }
 
     if (restart()){
@@ -381,22 +420,22 @@ int main(){
 
     cout << "\n--- Welcome to { BABY PHOTOSHOP } ---\n" << endl;
     cout << "1) Grayscale" << endl;
-    cout << "3) Invert Image" << endl;
-    cout << "5) Flip Image" << endl;
-    cout << "7) Darken & Lighten" << endl;
-    cout << "8) Crop Image" << endl;
+    cout << "2) Invert Image" << endl;
+    cout << "3) Flip Image" << endl;
+    cout << "4) Darken & Lighten" << endl;
+    cout << "5) Crop Image" << endl;
     cout << "Please select the filter : " << endl;
     string selection;
     getline(cin, selection);
 
-    while (selection != "1" && selection != "8" && selection != "3" && selection != "5" && selection != "7"){
-        cerr << "Invalid Choice" << endl;
+    while (selection != "1" && selection != "2" && selection != "3" && selection != "4" && selection != "5"){
+        cout << "\nInvalid Choice\n" << endl;
         cin.clear();
         cout << "1) Grayscale" << endl;
-        cout << "3) Invert Image" << endl;
-        cout << "5) Flip Image" << endl;
-        cout << "7) Darken & Lighten" << endl;
-        cout << "8) Crop Image" << endl;
+        cout << "2) Invert Image" << endl;
+        cout << "3) Flip Image" << endl;
+        cout << "4) Darken & Lighten" << endl;
+        cout << "5) Crop Image" << endl;
         cout << "Please select the filter : " << endl;
         cin >> selection;
 
@@ -407,19 +446,19 @@ int main(){
         grayscale();
     }
 
-    if (selection == "3"){
+    if (selection == "2"){
         invert_image();
     }
 
-    if (selection == "5"){
+    if (selection == "3"){
         ImageFlip();
     }
 
-    if (selection == "7"){
+    if (selection == "4"){
         Darken_lighten();
     }
 
-    if (selection == "8"){
+    if (selection == "5"){
         ImageCrop();
     }
 
