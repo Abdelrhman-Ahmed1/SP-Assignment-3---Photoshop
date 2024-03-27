@@ -135,6 +135,7 @@ void invert_image(){
     }
 
     image.saveImage(new_pic_name);
+    cout << "Image saved successfully as: " << new_pic_name << endl;
 
     if (restart()){
         invert_image();
