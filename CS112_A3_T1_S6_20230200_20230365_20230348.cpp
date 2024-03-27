@@ -1,10 +1,21 @@
 
+// Assignment 3 | Photoshop Program | Task 1
+// Including 5 Filters
+// ( 1.Grayscale - 3.Invert Image - 5.Flip Image - 7.Darken & Lighten - 8.Crop Image )
+
+// Authors:
+// 1. Abdelrhman Ahmed Abdelmonem Ahmed | 20230200 | Grayscale - Darken & Lighten
+// 2. Mohamed Kamel Ramadan             | 20230348 | Flip Image - Crop Image
+// 3. Mohammed Yasser Ismael El-Sayed   | 20230365 | Invert Image
+
+
 #include <iostream>
 #include "Image_Class.h"
 #include <fstream>
 #include "regex"
 
 using namespace std;
+
 int main();
 
 bool restart() {
@@ -296,6 +307,7 @@ void ImageFlip() {
         cout << "and specify extension: ";
         getline(cin, newimagename);
         flipped.saveImage(newimagename);
+        cout << "Image saved successfully as: " << newimagename << endl;
     } else if (choice == 2) {
         cin.ignore();
         for (int i = 0; i < image.width; i++) {
@@ -313,6 +325,7 @@ void ImageFlip() {
             regex check("([a-zA-Z0-9]+)\\.(jpg|bmp|png|tga)");
             if (regex_match(newimagename, check)) {
                 flipped.saveImage(newimagename);
+                cout << "Image saved successfully as: " << newimagename << endl;
                 break;
             } else {
                 cout << "Invalid filename or extension. Please try again\n";
@@ -394,6 +407,7 @@ void ImageCrop() {
                 bool valid = regex_match(newimagename, check);
                 if (valid){
                     newimage.saveImage(newimagename);
+                    cout << "Image saved successfully as: " << newimagename << endl;
                     break;
                 } else {
                     cout << "Invalid extension. please try again\n";
@@ -465,5 +479,4 @@ int main(){
 
 
 }
-
 
