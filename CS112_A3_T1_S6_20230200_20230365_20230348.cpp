@@ -84,8 +84,22 @@ void invert_image(){
     string pic_name, new_pic_name;
     cout << "Enter the picture's name [with extention]: ";
     cin >> pic_name;
+
+    ifstream file;
+    file.open(pic_name);
+    while(!file){
+        cout << "Image doesn't exist. Enter a valid path: ";
+        cin >> pic_name;
+        file.open(pic_name);
+    }
+
+    regex extention("\\.(jpg|jpeg|png|gif|bmp)$");
     cout << "Enter the new picture's name [with extention]: ";
     cin >> new_pic_name;
+    while(!regex_search(new_pic_name, extention)){
+        cout << "Invalid file name, Please enter a valid one: ";
+        cin >> new_pic_name;
+    }
 
     Image image(pic_name);
 
@@ -103,7 +117,6 @@ void invert_image(){
         invert_image();
     }
 }
-
 
 
 
