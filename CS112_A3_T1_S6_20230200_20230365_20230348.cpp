@@ -152,7 +152,7 @@ void Darken_lighten(){
     getline(cin, mode);
 
     while (mode != "1" && mode != "2"){
-        cerr << "Invalid Choice" << endl;
+        cout << "Invalid Choice" << endl;
         cin.ignore();
         cout << "1) lighten\n2) Darken" << endl;
         cout << "Please select your mode:" << endl;
