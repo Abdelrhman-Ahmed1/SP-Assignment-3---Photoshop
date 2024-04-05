@@ -6,7 +6,7 @@
 // Authors:
 // 1. Abdelrhman Ahmed Abdelmonem Ahmed | 20230200 | Grayscale - Darken & Lighten
 // 2. Mohamed Kamel Ramadan             | 20230348 | Flip Image - Crop Image
-// 3. Mohammed Yasser Ismael El-Sayed   | 20230365 | Invert Image
+// 3. Mohammed Yasser Ismael El-Sayed   | 20230365 | Invert Image - Rotate Image
 
 
 #include <iostream>
@@ -153,6 +153,73 @@ void invert_image(){
     }
 }
 
+
+void Rotate_Image(){
+    
+    string pic_name, new_pic_name;
+    cout << "Enter the picture's name [with extention]: ";
+    cin >> pic_name;
+    
+    ifstream file;
+    file.open(pic_name);
+    while(!file){
+        cout << "Image doesn't exist. Enter a valid path: ";
+        cin >> pic_name;
+        file.open(pic_name);
+    }
+    
+    regex extension("\\.(jpg|jpeg|png|gif|bmp)$");
+    cout << "Enter the new picture's name [with extention]: ";
+    cin >> new_pic_name;
+    
+    while(!regex_search(new_pic_name, extension)){
+        cout << "Invalid file name, Please enter a valid one: ";
+        cin >> new_pic_name;
+    }
+    
+    Image image(pic_name);
+    Image NEW(image.width, image.height);
+    char answer;
+    
+    cout << "Select rotation degree: \nA) 90 Deg\nB) 180 Deg\nC) 270 Deg" << endl;
+    cin >> answer;
+    answer = tolower(answer);
+    
+    switch(answer){
+        case 'c':
+            for(int i = 0; i < image.width; i++){
+                for(int j = 0; j < image.height; j++){
+                    for(int k = 0; k < 3; k++){
+                        NEW(j,i,k) = image(i,image.height - 1 - j, k);
+                    }
+                }
+            }
+            break;
+        
+        case 'a':
+            for(int i = 0; i < image.width; i++) {
+                for(int j = 0; j < image.height; j++) {
+                    for(int k = 0; k < 3; k++) {
+                        NEW(j, image.width - 1 - i, k) = image(i, j, k);
+                    }
+                }
+            }
+            break;
+        
+        case 'b':
+            for(int i = 0; i < image.width; i++) {
+                for(int j = 0; j < image.height; j++) {
+                    for(int k = 0; k < 3; k++) {
+                        NEW(image.width - 1 - i, image.height - 1 - j, k) = image(i, j, k);
+                    }
+                }
+            }
+            break;
+        
+    }
+    NEW.saveImage(new_pic_name);
+    cout << "Image saved successfully as: " << new_pic_name << endl;
+}
 
 
 void Darken_lighten(){
@@ -437,20 +504,22 @@ int main(){
     cout << "1) Grayscale" << endl;
     cout << "2) Invert Image" << endl;
     cout << "3) Flip Image" << endl;
-    cout << "4) Darken & Lighten" << endl;
-    cout << "5) Crop Image" << endl;
+    cout << "4) Rotate Image" << endl;
+    cout << "5) Darken & Lighten" << endl;
+    cout << "6) Crop Image" << endl;
     cout << "Please select the filter : " << endl;
     string selection;
     getline(cin, selection);
 
-    while (selection != "1" && selection != "2" && selection != "3" && selection != "4" && selection != "5"){
+    while (selection != "1" && selection != "2" && selection != "3" && selection != "4" && selection != "5" && selection != "6"){
         cout << "\nInvalid Choice\n" << endl;
         cin.clear();
         cout << "1) Grayscale" << endl;
         cout << "2) Invert Image" << endl;
         cout << "3) Flip Image" << endl;
-        cout << "4) Darken & Lighten" << endl;
-        cout << "5) Crop Image" << endl;
+        cout << "4) Rotate Image" << endl;
+        cout << "5) Darken & Lighten" << endl;
+        cout << "6) Crop Image" << endl;
         cout << "Please select the filter : " << endl;
         cin >> selection;
 
@@ -470,10 +539,14 @@ int main(){
     }
 
     if (selection == "4"){
-        Darken_lighten();
+        Rotate_Image();
     }
 
     if (selection == "5"){
+        Darken_lighten();
+    }
+
+    if (selection == "6"){
         ImageCrop();
     }
 
