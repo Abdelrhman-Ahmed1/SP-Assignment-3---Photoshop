@@ -221,6 +221,82 @@ void Rotate_Image(){
     cout << "Image saved successfully as: " << new_pic_name << endl;
 }
 
+void Blur_Image(string name, string new_name) {
+
+    string pic_name, new_pic_name;
+    cout << "Enter the picture's name [with extention]: ";
+    cin >> pic_name;
+    
+    ifstream file;
+    file.open(pic_name);
+    while(!file){
+        cout << "Image doesn't exist. Enter a valid path: ";
+        cin >> pic_name;
+        file.open(pic_name);
+    }
+    
+    regex extension("\\.(jpg|jpeg|png|gif|bmp)$");
+    cout << "Enter the new picture's name [with extention]: ";
+    cin >> new_pic_name;
+    
+    while(!regex_search(new_pic_name, extension)){
+        cout << "Invalid file name, Please enter a valid one: ";
+        cin >> new_pic_name;
+    }
+    
+    Image image(name);
+    char answer;
+    int first, second;
+    cout << "Enter Level of blurring:\nA) Level 1\nB) Level 2\nC) Level 3" << endl;
+    cin >> answer;
+    answer = tolower(answer);
+    
+    switch(answer){
+        case 'a':
+            first = 3;
+            second = 2;
+            break;
+        case 'b':
+            first = 6;
+            second = 5;
+            break;
+        case 'c':
+            first = 9;
+            second = 8;
+            break;
+        default:
+            cout << "Invalid input, enter a valid one: ";
+            cin >> answer;
+    }
+    
+    for(int i = 0; i < image.width; i = i + first) {
+        for(int j = 0; j < image.height; j = j + first) {
+            for(int k = 0; k < 3; k++) {
+                
+                if(i - 2 >= 0 && j - 2 >= 0) {
+                    int sum = 0;
+                    for(int newj = 0; newj <= second; newj++){
+                        for(int newi = 0; newi <= second; newi++){
+                            sum += image(i - newi, j - newj, k);
+                        }
+                    }
+                    
+                    int average = sum / (first * first);
+                    for(int newj = 0; newj <= second; newj++){
+                        for(int newi = 0; newi <= second; newi++){
+                            image(i - newi, j - newj, k) = average;
+                        }
+                    }
+                }
+                
+            }
+        }
+    }
+
+    image.saveImage(new_name);
+    cout << "Image saved successfully as: " << new_name << endl;
+}
+
 
 void Darken_lighten(){
 
