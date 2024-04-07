@@ -4,9 +4,9 @@
 // ( 1.Grayscale - 3.Invert Image - 5.Flip Image - 7.Darken & Lighten - 8.Crop Image )
 
 // Authors:
-// 1. Abdelrhman Ahmed Abdelmonem Ahmed | 20230200 | Grayscale - Darken & Lighten
+// 1. Abdelrhman Ahmed Abdelmonem Ahmed | 20230200 | Grayscale - Darken & Lighten - Detect Image Edges
 // 2. Mohamed Kamel Ramadan             | 20230348 | Flip Image - Crop Image
-// 3. Mohammed Yasser Ismael El-Sayed   | 20230365 | Invert Image - Rotate Image
+// 3. Mohammed Yasser Ismael El-Sayed   | 20230365 | Invert Image - Rotate Image - Blur Images
 
 
 #include <iostream>
@@ -217,9 +217,16 @@ void Rotate_Image(){
             break;
         
     }
+    
     NEW.saveImage(new_pic_name);
     cout << "Image saved successfully as: " << new_pic_name << endl;
+
+    if (restart()){
+        Rotate_Image();
+    }
+    
 }
+
 
 void Blur_Image(string name, string new_name) {
 
@@ -295,6 +302,11 @@ void Blur_Image(string name, string new_name) {
 
     image.saveImage(new_name);
     cout << "Image saved successfully as: " << new_name << endl;
+
+    if (restart()){
+        Blur_Image();
+    }
+    
 }
 
 
@@ -570,7 +582,79 @@ void ImageCrop() {
 }
 
 
+void Detect_edges(){
 
+    string path;
+    cout << "Enter your file path (with File Extention): ";
+    getline(cin, path);
+
+    ifstream filename;
+    filename.open(path);
+
+    while (!filename){
+        cout << "File Not Found" << endl;
+        cin.clear();
+        cout << "Enter your file path (with File Extention): ";
+        getline(cin, path);
+        filename.open(path);
+
+    }
+
+    string saved_file;
+    cout << "Enter The name of the saved file with extentions .jpg / .jpeg / .png / .bmp: " << endl;
+    getline(cin, saved_file);
+
+    regex result("([a-zA-Z0-9]+)\\.(jpg|bmp|png|tga)");
+    while(!regex_match(saved_file, result)){
+
+        cin.ignore();
+        cout << "Invalid File name or extention" << endl;
+        cout << "Enter The name of the saved file with extentions .jpg / .jpeg / .png / .bmp: " << endl;
+        getline(cin, saved_file);
+
+    }
+
+
+    Image image(path);
+
+    for (int i = 0; i < image.width; ++i){
+        for (int j = 0; j < image.height; ++j){
+
+            unsigned int avr = 0;
+            for (int k = 0; k < image.channels; ++k){
+                avr += image(i,j,k);
+            }
+            avr = avr/3;
+
+            image(i,j,0) = avr;
+            image(i,j,1) = avr;
+            image(i,j,2) = avr;
+
+            for (int k = 0; k < image.channels; ++k){
+                if (abs(image(i,j,k)-image(i+1,j+1,k) >= 25)){
+                    avr= 0;
+                }
+                else{
+                    avr= 255;
+                }
+            }
+
+            image(i,j,0) = avr;
+            image(i,j,1) = avr;
+            image(i,j,2) = avr;
+
+        }
+
+    }
+
+    image.saveImage(saved_file);
+    cout << "\n Image Saved succesfully as " << saved_file << "\n" << endl;
+
+    if (restart()){
+       Detect_edges();
+    }
+
+}
 
 
 
@@ -583,11 +667,13 @@ int main(){
     cout << "4) Rotate Image" << endl;
     cout << "5) Darken & Lighten" << endl;
     cout << "6) Crop Image" << endl;
+    cout << "7) Detect Image Edges" << endl;
+    cout << "8) Blur Image" << endl;
     cout << "Please select the filter : " << endl;
     string selection;
     getline(cin, selection);
 
-    while (selection != "1" && selection != "2" && selection != "3" && selection != "4" && selection != "5" && selection != "6"){
+    while (selection != "1" && selection != "2" && selection != "3" && selection != "4" && selection != "5" && selection != "6" && selection != "7" && selection != "8"){
         cout << "\nInvalid Choice\n" << endl;
         cin.clear();
         cout << "1) Grayscale" << endl;
@@ -596,6 +682,8 @@ int main(){
         cout << "4) Rotate Image" << endl;
         cout << "5) Darken & Lighten" << endl;
         cout << "6) Crop Image" << endl;
+        cout << "7) Detect Image Edges" << endl;
+        cout << "8) Blur Image" << endl;
         cout << "Please select the filter : " << endl;
         cin >> selection;
 
@@ -624,6 +712,14 @@ int main(){
 
     if (selection == "6"){
         ImageCrop();
+    }
+
+    if (selection == "7"){
+        Detect_edges();
+    }
+
+    if (selection == "8"){
+        Blur_Image();
     }
 
 
