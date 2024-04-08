@@ -48,6 +48,7 @@ bool restart() {
         exit(0);
     }
 
+    return 0;
 }
 
 void grayscale(){
@@ -155,11 +156,11 @@ void invert_image(){
 
 
 void Rotate_Image(){
-    
+
     string pic_name, new_pic_name;
     cout << "Enter the picture's name [with extention]: ";
     cin >> pic_name;
-    
+
     ifstream file;
     file.open(pic_name);
     while(!file){
@@ -167,24 +168,24 @@ void Rotate_Image(){
         cin >> pic_name;
         file.open(pic_name);
     }
-    
+
     regex extension("\\.(jpg|jpeg|png|gif|bmp)$");
     cout << "Enter the new picture's name [with extention]: ";
     cin >> new_pic_name;
-    
+
     while(!regex_search(new_pic_name, extension)){
         cout << "Invalid file name, Please enter a valid one: ";
         cin >> new_pic_name;
     }
-    
+
     Image image(pic_name);
     Image NEW(image.width, image.height);
     char answer;
-    
+
     cout << "Select rotation degree: \nA) 90 Deg\nB) 180 Deg\nC) 270 Deg" << endl;
     cin >> answer;
     answer = tolower(answer);
-    
+
     switch(answer){
         case 'c':
             for(int i = 0; i < image.width; i++){
@@ -195,7 +196,7 @@ void Rotate_Image(){
                 }
             }
             break;
-        
+
         case 'a':
             for(int i = 0; i < image.width; i++) {
                 for(int j = 0; j < image.height; j++) {
@@ -205,7 +206,7 @@ void Rotate_Image(){
                 }
             }
             break;
-        
+
         case 'b':
             for(int i = 0; i < image.width; i++) {
                 for(int j = 0; j < image.height; j++) {
@@ -215,25 +216,25 @@ void Rotate_Image(){
                 }
             }
             break;
-        
+
     }
-    
+
     NEW.saveImage(new_pic_name);
     cout << "Image saved successfully as: " << new_pic_name << endl;
 
     if (restart()){
         Rotate_Image();
     }
-    
+
 }
 
 
-void Blur_Image(string name, string new_name) {
+void Blur_Image() {
 
     string pic_name, new_pic_name;
     cout << "Enter the picture's name [with extention]: ";
     cin >> pic_name;
-    
+
     ifstream file;
     file.open(pic_name);
     while(!file){
@@ -241,23 +242,23 @@ void Blur_Image(string name, string new_name) {
         cin >> pic_name;
         file.open(pic_name);
     }
-    
+
     regex extension("\\.(jpg|jpeg|png|gif|bmp)$");
     cout << "Enter the new picture's name [with extention]: ";
     cin >> new_pic_name;
-    
+
     while(!regex_search(new_pic_name, extension)){
         cout << "Invalid file name, Please enter a valid one: ";
         cin >> new_pic_name;
     }
-    
-    Image image(name);
+
+    Image image(pic_name);
     char answer;
     int first, second;
     cout << "Enter Level of blurring:\nA) Level 1\nB) Level 2\nC) Level 3" << endl;
     cin >> answer;
     answer = tolower(answer);
-    
+
     switch(answer){
         case 'a':
             first = 3;
@@ -275,11 +276,11 @@ void Blur_Image(string name, string new_name) {
             cout << "Invalid input, enter a valid one: ";
             cin >> answer;
     }
-    
+
     for(int i = 0; i < image.width; i = i + first) {
         for(int j = 0; j < image.height; j = j + first) {
             for(int k = 0; k < 3; k++) {
-                
+
                 if(i - 2 >= 0 && j - 2 >= 0) {
                     int sum = 0;
                     for(int newj = 0; newj <= second; newj++){
@@ -287,7 +288,7 @@ void Blur_Image(string name, string new_name) {
                             sum += image(i - newi, j - newj, k);
                         }
                     }
-                    
+
                     int average = sum / (first * first);
                     for(int newj = 0; newj <= second; newj++){
                         for(int newi = 0; newi <= second; newi++){
@@ -295,18 +296,18 @@ void Blur_Image(string name, string new_name) {
                         }
                     }
                 }
-                
+
             }
         }
     }
 
-    image.saveImage(new_name);
-    cout << "Image saved successfully as: " << new_name << endl;
+    image.saveImage(new_pic_name);
+    cout << "Image saved successfully as: " << new_pic_name << endl;
 
     if (restart()){
         Blur_Image();
     }
-    
+
 }
 
 
@@ -651,7 +652,7 @@ void Detect_edges(){
     cout << "\n Image Saved succesfully as " << saved_file << "\n" << endl;
 
     if (restart()){
-       Detect_edges();
+        Detect_edges();
     }
 
 }
