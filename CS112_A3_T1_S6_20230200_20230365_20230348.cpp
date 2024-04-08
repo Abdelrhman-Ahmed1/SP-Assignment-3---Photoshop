@@ -234,84 +234,88 @@ void Rotate_Image(){
 
 
 void Blur_Image() {
-
     string pic_name, new_pic_name;
-    cout << "Enter the picture's name [with extention]: ";
+    cout << "Enter the picture's name [with extension]: ";
     cin >> pic_name;
 
     ifstream file;
     file.open(pic_name);
-    while(!file){
+    while (!file) {
         cout << "Image doesn't exist. Enter a valid path: ";
         cin >> pic_name;
         file.open(pic_name);
     }
 
     regex extension("\\.(jpg|jpeg|png|gif|bmp)$");
-    cout << "Enter the new picture's name [with extention]: ";
+    cout << "Enter the new picture's name [with extension]: ";
     cin >> new_pic_name;
 
-    while(!regex_search(new_pic_name, extension)){
-        cout << "Invalid file name, Please enter a valid one: ";
+    while (!regex_search(new_pic_name, extension)) {
+        cout << "Invalid file name, enter a valid one: ";
         cin >> new_pic_name;
     }
 
     Image image(pic_name);
     char answer;
-    int first, second;
-    cout << "Enter Level of blurring:\nA) Level 1\nB) Level 2\nC) Level 3" << endl;
+    int radius;
+    cout << "Enter Level of blurring:\nA) Level 1\nB) Level 2\nC) Level 3\nD) Level 4\nE) Level 5" << endl;
     cin >> answer;
     answer = tolower(answer);
 
-    switch(answer){
+    switch (answer) {
         case 'a':
-            first = 3;
-            second = 2;
+            radius = 1;
             break;
         case 'b':
-            first = 6;
-            second = 5;
+            radius = 2;
             break;
         case 'c':
-            first = 9;
-            second = 8;
+            radius = 3;
+            break;
+        case 'd':
+            radius = 4;
+            break;
+        case 'e':
+            radius = 5;
             break;
         default:
             cout << "Invalid input, enter a valid one: ";
             cin >> answer;
     }
 
-    for(int i = 0; i < image.width; i = i + first) {
-        for(int j = 0; j < image.height; j = j + first) {
-            for(int k = 0; k < 3; k++) {
+    Image blurred(image.width, image.height);
 
-                if(i - 2 >= 0 && j - 2 >= 0) {
-                    int sum = 0;
-                    for(int newj = 0; newj <= second; newj++){
-                        for(int newi = 0; newi <= second; newi++){
-                            sum += image(i - newi, j - newj, k);
-                        }
-                    }
-
-                    int average = sum / (first * first);
-                    for(int newj = 0; newj <= second; newj++){
-                        for(int newi = 0; newi <= second; newi++){
-                            image(i - newi, j - newj, k) = average;
+    for (int i = 0; i < image.width; i++) {
+        for (int j = 0; j < image.height; j++) {
+            int RedSum = 0, GreenSum = 0, BlueSum = 0, count = 0;
+            for (int y = -radius; y <= radius; y++) {
+                int newY = j + y;
+                if (newY >= 0 && newY < image.height) {
+                    for (int x = -radius; x <= radius; x++) {
+                        int newX = i + x;
+                        if (newX >= 0 && newX < image.width) {
+                            RedSum += image(newX, newY, 0);
+                            GreenSum += image(newX, newY, 1);
+                            BlueSum += image(newX, newY, 2);
+                            count++;
                         }
                     }
                 }
-
             }
+            blurred(i, j, 0) = RedSum / count;
+            blurred(i, j, 1) = GreenSum / count;
+            blurred(i, j, 2) = BlueSum / count;
         }
     }
 
-    image.saveImage(new_pic_name);
+    blurred.saveImage(new_pic_name);
     cout << "Image saved successfully as: " << new_pic_name << endl;
+
+    return 0;
 
     if (restart()){
         Blur_Image();
     }
-
 }
 
 
