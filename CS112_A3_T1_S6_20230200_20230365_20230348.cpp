@@ -180,6 +180,7 @@ void Rotate_Image(){
 
     Image image(pic_name);
     Image NEW(image.width, image.height);
+    Image NEW2(image.height, image.width);
     char answer;
 
     cout << "Select rotation degree: \nA) 90 Deg\nB) 180 Deg\nC) 270 Deg" << endl;
@@ -191,20 +192,24 @@ void Rotate_Image(){
             for(int i = 0; i < image.width; i++){
                 for(int j = 0; j < image.height; j++){
                     for(int k = 0; k < 3; k++){
-                        NEW(j,i,k) = image(i,image.height - 1 - j, k);
+                        NEW2(j,i,k) = image(i,image.height - 1 - j, k);
                     }
                 }
             }
+            NEW2.saveImage(new_pic_name);
+            cout << "Image saved successfully as: " << new_pic_name << endl;
             break;
 
         case 'a':
             for(int i = 0; i < image.width; i++) {
                 for(int j = 0; j < image.height; j++) {
                     for(int k = 0; k < 3; k++) {
-                        NEW(j, image.width - 1 - i, k) = image(i, j, k);
+                        NEW2(j, image.width - 1 - i, k) = image(i, j, k);
                     }
                 }
             }
+            NEW2.saveImage(new_pic_name);
+            cout << "Image saved successfully as: " << new_pic_name << endl;
             break;
 
         case 'b':
@@ -215,13 +220,12 @@ void Rotate_Image(){
                     }
                 }
             }
+            NEW.saveImage(new_pic_name);
+            cout << "Image saved successfully as: " << new_pic_name << endl;
             break;
 
     }
-
-    NEW.saveImage(new_pic_name);
-    cout << "Image saved successfully as: " << new_pic_name << endl;
-
+    
     if (restart()){
         Rotate_Image();
     }
