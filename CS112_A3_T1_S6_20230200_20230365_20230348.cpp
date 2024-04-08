@@ -318,6 +318,320 @@ void Blur_Image() {
     }
 }
 
+void Add_Frame() {
+    string pic_name, new_pic_name;
+    cout << "Enter the picture's name [with extension]: ";
+    cin >> pic_name;
+
+    ifstream file;
+    file.open(pic_name);
+    while (!file) {
+        cout << "Image doesn't exist. Enter a valid path: ";
+        cin >> pic_name;
+        file.open(pic_name);
+    }
+
+    regex extension("\\.(jpg|jpeg|png|gif|bmp)$");
+    cout << "Enter the new picture's name [with extension]: ";
+    cin >> new_pic_name;
+
+    while (!regex_search(new_pic_name, extension)) {
+        cout << "Invalid file name, enter a valid one: ";
+        cin >> new_pic_name;
+    }
+
+    Image image(pic_name);
+    int R = 0, G = 0, B = 0, R2 = 0, G2 = 0, B2 = 0;
+    char frame_type, primary_frame_color, secondary_frame_color;
+    bool There_Is_SFM = false, Its_Primary = true, Is_Fancy = false;
+    int a, b, c, d, e, f, g, h, m;
+
+    cout << "Enter frame type:\nA) Basic Frame\nB) Simple Two Colors Frame\nC) Simple Three Colors Frame\nD) Fancy Two Colors Frame\nE) Fancy Three Colors Frame" << endl;
+    cin >> frame_type;
+    frame_type = tolower(frame_type);
+
+    switch(frame_type){
+        case 'a':
+            Its_Primary = false;
+            break;
+        case 'b':
+            There_Is_SFM = true;
+            break;
+        case 'd':
+            Is_Fancy = true;
+            There_Is_SFM = true;
+            break;
+        case 'c':
+            There_Is_SFM = true;
+            break;
+        case 'e':
+            Is_Fancy = true;
+            There_Is_SFM = true;
+            break;
+        default:
+            cout << "Invalid answer, enter a valid one: ";
+            cin >> frame_type;
+    }
+
+    if(Its_Primary){
+        cout << "Enter Primary Frame Color [Inner Color]:\nA) White\nB) Black\nC) Red\nD) Orange\nE) Yellow\nF) Blue\nG) Cyan\n" << endl;
+    }
+    else{
+        cout << "Enter Frame Color:\nA) White\nB) Black\nC) Red\nD) Orange\nE) Yellow\nF) Blue\nG) Cyan\n" << endl;
+    }
+
+    cin >> primary_frame_color;
+    primary_frame_color = tolower(primary_frame_color);
+
+    switch(primary_frame_color){
+        case 'a':
+            R = 255, G = 255, B = 255;
+            break;
+        case 'b':
+            break;
+        case 'c':
+            R = 255;
+            break;
+        case 'd':
+            R = 255, G = 165;
+            break;
+        case 'e':
+            R = 255, G = 255;
+            break;
+        case 'f':
+            B = 255;
+            break;
+        case 'g':
+            G = 255, B = 255;
+            break;
+        default:
+            cout << "Invalid answer, enter a valid one: ";
+            cin >> primary_frame_color;
+    }
+
+    if(There_Is_SFM){
+        cout << "Enter Secondary Frame Color [Outer Color]:\nA) White\nB) Light Gray\nC) Gray\nD) Dark Gray\nE) Black" << endl;
+        cin >> secondary_frame_color;
+        secondary_frame_color = tolower(secondary_frame_color);
+
+        switch(secondary_frame_color){
+            case 'a':
+                R2 = 255, G2 = 255, B2 = 255;
+                break;
+            case 'b':
+                R2 = 220, G2 = 220, B2 = 220;
+                break;
+            case 'c':
+                R2 = 180, G2 = 180, B2 = 180;
+                break;
+            case 'd':
+                R2 = 125, G2 = 125, B2 = 125;
+                break;
+            case 'e':
+                break;
+            default:
+                cout << "Invalid answer, enter a valid one: ";
+                cin >> secondary_frame_color;
+            }
+    }
+
+
+
+    switch(frame_type){
+        case 'b': case 'd':
+            a = int(image.height * (1.25/100));
+            b = int(image.width * (1.25/100));
+            c = int(image.height * (1.25/100));
+            d = image.width - int(image.width * (1.25/100));
+            e = int(image.height * (1.25/100));
+            f = image.height - int(image.width * (1.25/100));
+            g = int(image.width * (1.25/100));
+            h = int(image.width * (3.5/100));
+            m = int(image.height * (3.5/100));
+            break;
+        case 'c': case 'e':
+            a = int(image.height * (3.5/100));
+            b = int(image.width * (3.5/100));
+            c = int(image.height * (2.75/100));
+            d = image.width - int(image.width * (0.75/100));
+            e = int(image.height * (0.75/100));
+            f = image.height - int(image.width * (0.75/100));
+            g = int(image.width * (0.75/100));
+            h = int(image.width * (2.75/100));
+            m = c;
+            break;
+    }
+
+
+    switch(frame_type){
+        case 'a':
+            for (int i = 0; i < image.width; i++){
+                for (int j = 0; j < int(image.height * (3.5/100)); j++){
+                    for (int k = 0; k < 3; k++){
+                        switch (k){
+                            case 0:
+                                image(i, j, k) = R;
+                                image(i, image.height - 1 - j, k) = R;
+                                break;
+                            case 1:
+                                image(i, j, k) = G;
+                                image(i, image.height - 1 - j, k) = G;
+                                break;
+                            case 2:
+                                image(i, j, k) = B;
+                                image(i, image.height - 1 - j, k) = B;
+                                break;
+                        }
+                    }
+                }
+            }
+            for (int i = 0; i < int(image.width * (3.5/100)); i++){
+                for (int j = 0; j < image.height; j++){
+                    for (int k = 0; k < 3; k++){
+                        switch (k){
+                            case 0:
+                                image(i, j, k) = R;
+                                image(image.width - 1 - i, j, k) = R;
+                                break;
+                            case 1:
+                                image(i, j, k) = G;
+                                image(image.width - 1 - i, j, k) = G;
+                                break;
+                            case 2:
+                                image(i, j, k) = B;
+                                image(image.width - 1 - i, j, k) = B;
+                                break;
+                        }
+                    }
+                }
+            }
+            break;
+
+        case 'b': case 'c': case 'd': case 'e':
+            for (int i = 0; i < image.width; i++){
+                for (int j = 0; j < a; j++){
+                    for (int k = 0; k < 3; k++){
+                        switch (k){
+                            case 0:
+                                image(i, j, k) = R2;
+                                image(i, image.height - 1 - j, k) = R2;
+                                break;
+                            case 1:
+                                image(i, j, k) = G2;
+                                image(i, image.height - 1 - j, k) = G2;
+                                break;
+                            case 2:
+                                image(i, j, k) = B2;
+                                image(i, image.height - 1 - j, k) = B2;
+                                break;
+                        }
+                    }
+                }
+            }
+
+            for (int i = 0; i < b; i++){
+                for (int j = 0; j < image.height; j++){
+                    for (int k = 0; k < 3; k++){
+                        switch (k){
+                            case 0:
+                                image(i, j, k) = R2;
+                                image(image.width - 1 - i, j, k) = R2;
+                                break;
+                            case 1:
+                                image(i, j, k) = G2;
+                                image(image.width - 1 - i, j, k) = G2;
+                                break;
+                            case 2:
+                                image(i, j, k) = B2;
+                                image(image.width - 1 - i, j, k) = B2;
+                                break;
+                        }
+                    }
+                }
+            }
+
+            for (int i = c; i < d; i++){
+                for (int j = e; j < m; j++){
+                    for (int k = 0; k < 3; k++){
+                        switch (k){
+                            case 0:
+                                image(i, j, k) = R;
+                                image(i, image.height - 1 - j, k) = R;
+                                break;
+                            case 1:
+                                image(i, j, k) = G;
+                                image(i, image.height - 1 - j, k) = G;
+                                break;
+                            case 2:
+                                image(i, j, k) = B;
+                                image(i, image.height - 1 - j, k) = B;
+                                break;
+                        }
+                    }
+                }
+            }
+
+            for (int i = g; i < h; i++){
+                for (int j = g; j < f; j++){
+                    for (int k = 0; k < 3; k++){
+                        switch (k){
+                            case 0:
+                                image(i, j, k) = R;
+                                image(image.width - 1 - i, j, k) = R;
+                                break;
+                            case 1:
+                                image(i, j, k) = G;
+                                image(image.width - 1 - i, j, k) = G;
+                                break;
+                            case 2:
+                                image(i, j, k) = B;
+                                image(image.width - 1 - i, j, k) = B;
+                                break;
+                        }
+                    }
+                }
+            }
+
+            break;
+    }
+
+    if(Is_Fancy){
+        int start_i = image.width * 0.015;
+        int end_i = image.width * 0.065;
+        int start_j = image.height * 0.015;
+        int end_j = image.height * 0.065;
+
+        for(int i = start_i; i < end_i; i++){
+            for(int j = start_j; j < end_j; j++){
+                image(i, j, 0) = R;
+                image(i, j, 1) = G;
+                image(i, j, 2) = B;
+
+                image(i, image.height - 1 - j, 0) = R;
+                image(i, image.height - 1 - j, 1) = G;
+                image(i, image.height - 1 - j, 2) = B;
+
+                image(image.width - 1 - i, j, 0) = R;
+                image(image.width - 1 - i, j, 1) = G;
+                image(image.width - 1 - i, j, 2) = B;
+
+                image(image.width - 1 - i, image.height - 1 - j, 0) = R;
+                image(image.width - 1 - i, image.height - 1 - j, 1) = G;
+                image(image.width - 1 - i, image.height - 1 - j, 2) = B;
+            }
+        }
+    }
+
+
+    image.saveImage(new_pic_name);
+    cout << "Image saved successfully as: " << new_pic_name << endl;
+
+    if (restart()){
+        Add_Frame();
+    }
+
+}
+
 
 void Darken_lighten(){
 
@@ -729,6 +1043,10 @@ int main(){
 
     if (selection == "8"){
         Blur_Image();
+    }
+
+    if (selection == "8"){
+        Add_Frame();
     }
 
 
