@@ -4,7 +4,7 @@
 // ( 1.Grayscale - 3.Invert Image - 5.Flip Image - 7.Darken & Lighten - 8.Crop Image )
 
 // Authors:
-// 1. Abdelrhman Ahmed Abdelmonem Ahmed | 20230200 | Grayscale - Darken & Lighten - Detect Image Edges
+// 1. Abdelrhman Ahmed Abdelmonem Ahmed | 20230200 | Grayscale - Darken & Lighten - Detect Image Edges - Merge Two Images
 // 2. Mohamed Kamel Ramadan             | 20230348 | Flip Image - Crop Image
 // 3. Mohammed Yasser Ismael El-Sayed   | 20230365 | Invert Image - Rotate Image - Blur Images
 
@@ -979,6 +979,147 @@ void Detect_edges(){
 
 }
 
+void Merge_two_images(){
+
+
+    string path1;
+    cout << "Enter your first file path (with File Extention): ";
+    getline(cin, path1);
+
+    ifstream filename1;
+    filename1.open(path1);
+
+    while (!filename1){
+        cout << "File Not Found" << endl;
+        cin.clear();
+        cout << "Enter your first file path (with File Extention): ";
+        getline(cin, path1);
+        filename1.open(path1);
+
+    }
+
+    string path2;
+    cout << "Enter your second file path (with File Extention): ";
+    getline(cin, path2);
+
+    ifstream filename2;
+    filename2.open(path2);
+
+    while (!filename2){
+
+        cout << "File Not Found" << endl;
+        cin.clear();
+        cout << "Enter your second file path (with File Extention): ";
+        getline(cin, path2);
+        filename2.open(path2);
+
+    }
+
+
+    string mode;
+    cout << "1) Merge with max height & width\n2) Merge with min height & width" << endl;
+    cout << "Please select your mode:" << endl;
+    getline(cin, mode);
+
+    while (mode != "1" && mode != "2"){
+        cout << "Invalid Choice" << endl;
+        cin.ignore();
+        cout << "1) Merge with max height & width\n2) Merge with min height & width" << endl;
+        cout << "Please select your mode:" << endl;
+        getline(cin, mode);
+
+    }
+
+    string saved_file;
+    cout << "Enter The name of the saved file with extentions .jpg / .jpeg / .png / .bmp: " << endl;
+    getline(cin, saved_file);
+
+    regex saved("([a-zA-Z0-9]+)\\.(jpg|bmp|png|tga)");
+    while(!regex_match(saved_file, saved)){
+
+        cin.ignore();
+        cout << "Invalid File name or extention" << endl;
+        cout << "Enter The name of the saved file with extentions .jpg / .jpeg / .png / .bmp: " << endl;
+        getline(cin, saved_file);
+
+    }
+
+
+    Image image1(path1);
+    Image image2(path2);
+    int result_width, result_height;
+
+    if (mode == "1"){
+        result_width = max(image1.width, image2.width);
+        result_height = max(image1.height, image2.height);
+    }
+    else if (mode == "2"){
+        result_width = min(image1.width, image2.width);
+        result_height = min(image1.height, image2.height);
+    }
+
+
+    Image newimage1(result_width, result_height);
+    Image newimage2(result_width, result_height);
+    Image result(result_width, result_height);
+
+    double w1factor = floor(image1.width) / result_width;
+    double h1factor = floor(image1.height) / result_height;
+
+    double w2factor = floor(image2.width) / result_width;
+    double h2factor = floor(image2.height) / result_height;
+
+
+    for (int i = 0; i < result_width; i++) {
+        for (int j = 0; j < result_height; j++) {
+            for (int k = 0; k < 3; k++) {
+                int xref1 = floor(i * w1factor);
+                int yref1 = floor(j * h1factor);
+
+                int xref2 = floor(i * w2factor);
+                int yref2 = floor(j * h2factor);
+
+                unsigned char pixelvalue1 = image1.getPixel(xref1, yref1, k);
+                newimage1.setPixel(i, j, k, pixelvalue1);
+
+                unsigned char pixelvalue2 = image2.getPixel(xref2, yref2, k);
+                newimage2.setPixel(i, j, k, pixelvalue2);
+
+            }
+        }
+    }
+
+
+
+    for (int i = 0; i < result_width; ++i){
+        for (int j = 0; j < result_height; ++j){
+
+            unsigned int x  = 0;
+            for (int k = 0; k < image2.channels; ++k){
+
+                x = newimage1(i,j,k) + newimage2(i,j,k);
+                x = x / 2;
+                if (x > 255){
+                    x = 255;
+                }
+                result(i,j,k) = x;
+
+
+            }
+
+        }
+    }
+
+    result.saveImage(saved_file);
+    cout << "\n Image Saved succesfully as " << saved_file << "\n" << endl;
+
+    if (restart()){
+        Merge_two_images();
+    }
+
+
+}
+
 
 
 int main(){
@@ -992,11 +1133,13 @@ int main(){
     cout << "6) Crop Image" << endl;
     cout << "7) Detect Image Edges" << endl;
     cout << "8) Blur Image" << endl;
+    cout << "9) Adding a Frame" << endl;
+    cout << "10) Merge Two Images" << endl;
     cout << "Please select the filter : " << endl;
     string selection;
     getline(cin, selection);
 
-    while (selection != "1" && selection != "2" && selection != "3" && selection != "4" && selection != "5" && selection != "6" && selection != "7" && selection != "8"){
+    while (selection != "1" && selection != "2" && selection != "3" && selection != "4" && selection != "5" && selection != "6" && selection != "7" && selection != "8" && selection != "9" && selection != "10"){
         cout << "\nInvalid Choice\n" << endl;
         cin.clear();
         cout << "1) Grayscale" << endl;
@@ -1007,6 +1150,8 @@ int main(){
         cout << "6) Crop Image" << endl;
         cout << "7) Detect Image Edges" << endl;
         cout << "8) Blur Image" << endl;
+        cout << "9) Adding a Frame" << endl;
+        cout << "10) Merge Two Images" << endl;
         cout << "Please select the filter : " << endl;
         cin >> selection;
 
@@ -1045,10 +1190,13 @@ int main(){
         Blur_Image();
     }
 
-    if (selection == "8"){
+    if (selection == "9"){
         Add_Frame();
     }
 
+    if (selection == "10"){
+        Merge_two_images();
+    }
 
 }
 
