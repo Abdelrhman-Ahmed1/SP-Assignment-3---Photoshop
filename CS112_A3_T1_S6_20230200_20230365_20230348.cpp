@@ -1030,6 +1030,7 @@ void Merge_two_images(){
 
     }
 
+    cin.ignore();
     string saved_file;
     cout << "Enter The name of the saved file with extentions .jpg / .jpeg / .png / .bmp: " << endl;
     getline(cin, saved_file);
