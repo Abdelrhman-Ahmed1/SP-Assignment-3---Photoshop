@@ -1253,7 +1253,10 @@ void imageresize(){
             }
 
             newimage.saveImage(newname);
-            cout << "Image saved successfully ";
+            cout << "\n Image Saved succesfully as " << newname << "\n" << endl;
+            if (restart()){
+                BlackandWhite();
+            }
             break;
         }
         case '2': {
