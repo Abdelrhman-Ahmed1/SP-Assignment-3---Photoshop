@@ -1,18 +1,18 @@
 
-// Assignment 3 | Photoshop Program | Task 1
-// Including 5 Filters
-// ( 1.Grayscale - 3.Invert Image - 5.Flip Image - 7.Darken & Lighten - 8.Crop Image )
+// Assignment 3 | Photoshop Program | Task 2
+// Including 12 Filters
 
 // Authors:
 // 1. Abdelrhman Ahmed Abdelmonem Ahmed | 20230200 | Grayscale - Darken & Lighten - Detect Image Edges - Merge Two Images
-// 2. Mohamed Kamel Ramadan             | 20230348 | Flip Image - Crop Image
-// 3. Mohammed Yasser Ismael El-Sayed   | 20230365 | Invert Image - Rotate Image - Blur Images
+// 2. Mohamed Kamel Ramadan             | 20230348 | Flip Image - Crop Image - Black & White - Resizing Images
+// 3. Mohammed Yasser Ismael El-Sayed   | 20230365 | Invert Image - Rotate Image - Blur Images - Adding a Frame
 
 
 #include <iostream>
 #include "Image_Class.h"
 #include <fstream>
 #include "regex"
+#include "cmath"
 
 using namespace std;
 
@@ -1120,6 +1120,193 @@ void Merge_two_images(){
 
 }
 
+void BlackandWhite(){
+
+    string imaganame , newimagename;
+    regex check("([a-zA-Z0-9]+)\\.(jpg|bmp|png|tga)");
+    cout << "Enter the path of the image you want to crop ";
+    cout << "(e.g. ImageName.Extension): " << endl;
+    getline(cin, imagename);
+    ifstream filename1;
+    filename1.open(imagename);
+
+    while (!filename1){
+        cout << "Wrong path. please try again" << endl;
+        cin.clear();
+        cout << "Enter the path of the image you want to crop ";
+        cout << "(e.g. ImageName.Extension): " << endl;
+        getline(cin, imagename);
+        filename1.open(imagename);
+
+    }
+    Image image(imagename);
+
+    for (int i = 0; i < image.width; ++i) {
+        for (int j = 0; j < image.height; ++j) {
+            unsigned  int avg = 0;
+
+            for (int k = 0; k < 3; ++k) {
+                avg += image(i, j, k);
+            }
+
+            avg /= 3;
+
+            if (avg >= 115){
+                for (int k = 0 ; k < 3 ; k++){
+                    image(i, j, k) = 255;
+                }
+            }
+            else if (avg < 115){
+                for (int k = 0 ; k < 3 ; k++){
+                    image(i, j, k) = 0;
+                }
+            }
+        }
+    }
+
+    cout << "Enter new image name: ";
+    cin >> newimagename;
+
+    while (!regex_match(newimagename, check)) {
+        cout << "Invalid extension. Please try again\n";
+        cin >> newimagename;
+    }
+
+    image.saveImage(newimagename);
+    cout << "\n Image Saved succesfully as " << newimagename << "\n" << endl;
+
+    if (restart()){
+        BlackandWhite();
+    }
+}
+
+
+void imageresize(){
+    
+    regex check("([a-zA-Z0-9]+)\\.(jpg|bmp|png|tga)");
+    string imagename, newname;
+    double percentage, factor, wfactor, hfactor;
+    int nwidth, nheight;
+
+    cout << "Enter image path: ";
+    getline(cin, imagename);
+
+    ifstream filename1(imagename);
+    while (!filename1) {
+        cout << "Wrong path. Please try again." << endl;
+        cin.clear();
+        cout << "Enter image path: ";
+        getline(cin, imagename);
+        filename1.open(imagename);
+    }
+    Image oimage(imagename);
+
+    cout << "Image width = " << oimage.width << endl;
+    cout << "Image height = " << oimage.height << endl;
+
+    cout << "1) Resize by a percentage      2) Choose new dimensions\n";
+
+    char choice;
+    cin >> choice;
+
+    while (choice != '1' && choice != '2') {
+        cout << "Invalid input. please try again. \n";
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin >> choice;
+    }
+
+    switch (choice) {
+        case '1': {
+            cout << "Enter resizing percentage: ";
+            cin >> percentage;
+
+            while (percentage <= 0) {
+                cout << "Please enter a positive percentage: ";
+                cin >> percentage;
+            }
+
+            factor = percentage / 100;
+
+            nwidth = floor(oimage.width * factor);
+            nheight = floor(oimage.height * factor);
+
+            Image newimage(nwidth, nheight);
+
+            for (int i = 0; i < newimage.width; i++) {
+                for (int j = 0; j < newimage.height; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        int xref = floor(i / factor);
+                        int yref = floor(j / factor);
+
+                        unsigned char pixelvalue = oimage.getPixel(xref, yref, k);
+                        newimage.setPixel(i, j, k, pixelvalue);
+                    }
+                }
+            }
+
+            cout << "Enter new image name: ";
+            cin >> newname;
+
+            while (!regex_match(newname, check)) {
+                cout << "Invalid extension. Please try again\n";
+                cin >> newname;
+            }
+
+            newimage.saveImage(newname);
+            cout << "Image saved successfully ";
+            break;
+        }
+        case '2': {
+            cout << "Enter new width: ";
+            cin >> nwidth;
+            cout << "Enter new height: ";
+            cin >> nheight;
+
+            while (nwidth <= 0 || nheight <= 0) {
+                cout << "Please enter positive dimensions: ";
+                cin >> nwidth >> nheight;
+            }
+
+            wfactor = floor(oimage.width) / nwidth;
+            hfactor = floor(oimage.height) / nheight;
+
+            Image newimage(nwidth, nheight);
+
+            for (int i = 0; i < newimage.width; i++) {
+                for (int j = 0; j < newimage.height; j++) {
+                    for (int k = 0; k < 3; k++) {
+                        int xref = floor(i * wfactor);
+                        int yref = floor(j * hfactor);
+
+                        unsigned char pixelvalue = oimage.getPixel(xref, yref, k);
+                        newimage.setPixel(i, j, k, pixelvalue);
+                    }
+                }
+            }
+            cout << "Enter new image name: ";
+            cin >> newname;
+
+            while (!regex_match(newname, check)) {
+                cout << "Invalid extension. Please try again\n";
+                cin >> newname;
+            }
+
+            newimage.saveImage(newname);
+            cout << "\n Image Saved succesfully as " << newname << "\n" << endl;
+            
+            if (restart()){
+                BlackandWhite();
+            }
+            
+            break;
+        }
+        default:
+            cout << "Invalid choice\n";
+    }
+
+}
+
 
 
 int main(){
@@ -1135,11 +1322,13 @@ int main(){
     cout << "8) Blur Image" << endl;
     cout << "9) Adding a Frame" << endl;
     cout << "10) Merge Two Images" << endl;
+    cout << "11) Black & White" << endl;
+    cout << "12) Resizing Images" << endl;
     cout << "Please select the filter : " << endl;
     string selection;
     getline(cin, selection);
 
-    while (selection != "1" && selection != "2" && selection != "3" && selection != "4" && selection != "5" && selection != "6" && selection != "7" && selection != "8" && selection != "9" && selection != "10"){
+    while (selection != "1" && selection != "2" && selection != "3" && selection != "4" && selection != "5" && selection != "6" && selection != "7" && selection != "8" && selection != "9" && selection != "10" && selection != "11" && selection != "12"){
         cout << "\nInvalid Choice\n" << endl;
         cin.clear();
         cout << "1) Grayscale" << endl;
@@ -1152,6 +1341,8 @@ int main(){
         cout << "8) Blur Image" << endl;
         cout << "9) Adding a Frame" << endl;
         cout << "10) Merge Two Images" << endl;
+        cout << "11) Black & White" << endl;
+        cout << "12) Resizing Images" << endl;
         cout << "Please select the filter : " << endl;
         cin >> selection;
 
@@ -1196,6 +1387,13 @@ int main(){
 
     if (selection == "10"){
         Merge_two_images();
+    }
+
+    if (selection == "11"){
+        BlackandWhite();
+    }
+    if (selection == "12"){
+        imageresize();
     }
 
 }
