@@ -225,7 +225,7 @@ void Rotate_Image(){
             break;
 
     }
-    
+
     if (restart()){
         Rotate_Image();
     }
@@ -431,7 +431,7 @@ void Add_Frame() {
             default:
                 cout << "Invalid answer, enter a valid one: ";
                 cin >> secondary_frame_color;
-            }
+        }
     }
 
 
@@ -637,14 +637,15 @@ void Darken_lighten(){
     string mode;
     cout << "1) lighten\n2) Darken" << endl;
     cout << "Please select your mode:" << endl;
-    getline(cin, mode);
+    cin >> mode;
 
     while (mode != "1" && mode != "2"){
+        cin.clear();
         cout << "Invalid Choice" << endl;
         cin.ignore();
         cout << "1) lighten\n2) Darken" << endl;
         cout << "Please select your mode:" << endl;
-        getline(cin, mode);
+        cin >> mode;
 
     }
 
@@ -1018,14 +1019,14 @@ void Merge_two_images(){
     string mode;
     cout << "1) Merge with max height & width\n2) Merge with min height & width" << endl;
     cout << "Please select your mode:" << endl;
-    getline(cin, mode);
+    cin >> mode;
 
     while (mode != "1" && mode != "2"){
         cout << "Invalid Choice" << endl;
         cin.ignore();
         cout << "1) Merge with max height & width\n2) Merge with min height & width" << endl;
         cout << "Please select your mode:" << endl;
-        getline(cin, mode);
+        cin >> mode;
 
     }
 
@@ -1181,7 +1182,7 @@ void BlackandWhite(){
 
 
 void imageresize(){
-    
+
     regex check("([a-zA-Z0-9]+)\\.(jpg|bmp|png|tga)");
     string imagename, newname;
     double percentage, factor, wfactor, hfactor;
@@ -1296,11 +1297,11 @@ void imageresize(){
 
             newimage.saveImage(newname);
             cout << "\n Image Saved succesfully as " << newname << "\n" << endl;
-            
+
             if (restart()){
                 BlackandWhite();
             }
-            
+
             break;
         }
         default:
@@ -1399,4 +1400,3 @@ int main(){
     }
 
 }
-
