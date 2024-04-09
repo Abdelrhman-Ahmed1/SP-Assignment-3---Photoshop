@@ -311,7 +311,6 @@ void Blur_Image() {
     blurred.saveImage(new_pic_name);
     cout << "Image saved successfully as: " << new_pic_name << endl;
 
-    return 0;
 
     if (restart()){
         Blur_Image();
@@ -1122,7 +1121,7 @@ void Merge_two_images(){
 
 void BlackandWhite(){
 
-    string imaganame , newimagename;
+    string imagename , newimagename;
     regex check("([a-zA-Z0-9]+)\\.(jpg|bmp|png|tga)");
     cout << "Enter the path of the image you want to crop ";
     cout << "(e.g. ImageName.Extension): " << endl;
