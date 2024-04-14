@@ -222,7 +222,7 @@ void Rotate_Image(string imagename){
                 }
             }
             //cin.ignore();
-            Apply(NEW2, imagename);
+            Apply(NEW, imagename);
             break;
     }
 }
