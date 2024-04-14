@@ -736,7 +736,7 @@ void Image_Crop(string imagename){
         }
     }
 
-    if (newW < xmargin && newH < ymargin) {
+    if (newW <= xmargin && newH <= ymargin) {
         Image newimage(newW, newH);
 
         for (int i = 0; i < newW; i++) {
