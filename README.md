@@ -1,5 +1,5 @@
-# SP Assignment 3 - Photoshop
-## 5 Filters up to 18 + GUI Filters isa
+# SP Assignment 3 - Baby Photoshop
+##15 Filters
 ### Coded by :
 #### Abdelrhman Ahmed Abdelmonem 
 #### Mohammed Yasser Ismael
