@@ -748,7 +748,7 @@ void Image_Crop(string imagename){
             }
         }
         //cin.ignore();
-        Apply(image, imagename);
+        Apply(newimage, imagename);
     }
 }
 
