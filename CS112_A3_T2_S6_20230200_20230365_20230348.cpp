@@ -1,11 +1,13 @@
 
-// Assignment 3 | Photoshop Program | Task 2
-// Including 15 Filters
+// Assignment 3 | Photoshop Program | Part 2B
+// Including 15 Filters ( 12 Filters + 3 Bonus )
 
 // Authors:
 // 1. Abdelrhman Ahmed Abdelmonem Ahmed | 20230200 | Grayscale - Darken & Lighten - Detect Image Edges - Merge Two Images - Infrared Photography (Bonus)
 // 2. Mohamed Kamel Ramadan             | 20230348 | Flip Image - Crop Image - Black & White - Resizing Images - Sunny Filter (Bonus)
 // 3. Mohammed Yasser Ismael El-Sayed   | 20230365 | Invert Image - Rotate Image - Blur Images - Adding a Frame - Night Filter (Bonus)
+
+// Section Number: S6
 
 #include <iostream>
 #include <fstream>
